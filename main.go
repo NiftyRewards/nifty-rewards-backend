@@ -13,7 +13,7 @@ func main() {
 	log.Printf("HELLO WORLD")
 
 	// Init API and DB
-	db, err := db.NewDB()
+	dbInst, err := db.NewDB()
 	if err != nil {
 		panic(err)
 	}
@@ -21,9 +21,18 @@ func main() {
 	port := os.Getenv("PORT")
 	log.Printf("[main] We're up and running!")
 
-	router := api.NewAPI(db)
-	err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
-	if err != nil {
-		log.Printf("err from  router: %v\n", err)
+	go func() {
+		router := api.NewAPI(dbInst)
+		err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
+		if err != nil {
+			log.Printf("err from  router: %v\n", err)
+		}
+	}()
+	// USERS TEST
+	if !db.MockGetUser(dbInst) {
+		panic(err)
+	}
+	if !db.MockCreateUser(dbInst) {
+		panic(err)
 	}
 }
