@@ -18,14 +18,12 @@ func main() {
 		panic(err)
 	}
 
-	log.Printf("[main] We're up and running!")
 	port := os.Getenv("PORT")
+	log.Printf("[main] We're up and running!")
 
-	go func() {
-		router := api.NewAPI(db)
-		err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
-		if err != nil {
-			log.Printf("err from  router: %v\n", err)
-		}
-	}()
+	router := api.NewAPI(db)
+	err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
+	if err != nil {
+		log.Printf("err from  router: %v\n", err)
+	}
 }
