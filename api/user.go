@@ -36,7 +36,7 @@ func GetUserByAddressW3A(w http.ResponseWriter, r *http.Request) {
 		err := json.NewEncoder(w).Encode(res)
 		if err != nil {
 			log.Printf("err sending resopnse: %v\n", err)
-		}FV
+		}
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -100,22 +100,27 @@ func GetNftsOfAccount(w http.ResponseWriter, r *http.Request) {
 	// Get User Query Param
 	addressW3a := chi.URLParam(r, "address_w3a")
 
-	// Address Sanitation??
+	// Address Sanitation??uu
 
 	// Call Tatum
 	response, err := http.Get("https://api-eu1.tatum.io/v3/nft/address/balance/MATIC/" + addressW3a)
 
-	Printf("%v", response)
+	log.Printf("%v", response)
+
+	// get the database from context
+	pgdb, ok := r.Context().Value("DB").(*pg.DB)
+	if !ok {
+		w = userErrResponse(errors.New("could not get database from context"), w)
+		return
+	}
 
 	// query for the user
-	user, err := db.UpsertUser(pgdb, &db.Users{
-		AddressW3a: addressW3a,
-		Address_B:  addressB,
-	})
+	user, err := db.GetUser(pgdb, addressW3a)
 	if err != nil {
 		w = userErrResponse(err, w)
 		return
 	}
+
 
 	// return a response
 	res := &UserResponse{
