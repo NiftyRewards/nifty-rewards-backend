@@ -30,16 +30,20 @@ func main() {
 	port := os.Getenv("PORT")
 	log.Printf("[main] We're up and running!")
 
-	go func() {
-		router := api.NewAPI(dbInst)
-		log.Printf("HERE1 %+v", router)
-		err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
-		log.Printf("HERE2")
-		if err != nil {
-			log.Printf("err from  router: %v\n", err)
-		}
-		log.Printf("HERE3")
-	}()
+	// Start server
+	router := api.NewAPI(dbInst)
+	err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
+	if err != nil {
+		log.Printf("err from  router: %v\n", err)
+	}
+	//go func(){
+	//	router := api.NewAPI(dbInst)
+	//	err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
+	//	if err != nil {
+	//		log.Printf("err from  router: %v\n", err)
+	//	}
+	//
+	//}()
 
 	// USERS TEST
 	if !db.MockGetUser(dbInst) {

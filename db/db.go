@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"github.com/go-pg/migrations/v8"
 	"github.com/go-pg/pg/v10"
 	"log"
@@ -52,9 +51,9 @@ func NewDB() (*pg.DB, error) {
 		return nil, err
 	}
 	if newVersion != oldVersion {
-		fmt.Printf("migrated from version %d to %d\n", oldVersion, newVersion)
+		log.Printf("migrated from version %d to %d\n", oldVersion, newVersion)
 	} else {
-		fmt.Printf("version is %d\n", oldVersion)
+		log.Printf("version is %d\n", oldVersion)
 	}
 
 	//return the db connections
