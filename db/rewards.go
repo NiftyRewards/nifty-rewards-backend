@@ -63,3 +63,13 @@ func UpdateReward(db *pg.DB, req *Rewards) (*Rewards, error) {
 
 	return reward, err
 }
+
+func GetAllRewardsByMerchantIdCollectionAddress(db *pg.DB, merchantId int, collectionAddress string) ([]*Rewards, error) {
+	rewards := make([]*Rewards, 0)
+	err := db.Model(&rewards).
+		Where("rewards.merchant_id = ?", merchantId).
+		Where("rewards.collection_address = ?", collectionAddress).
+		Select()
+
+	return rewards, err
+}

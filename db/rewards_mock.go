@@ -149,6 +149,7 @@ func MockGetRewardsByMerchantId(db *pg.DB) bool {
 		Description:       Reward3Desc,
 		MaxQuantity:       Reward3MaxQuantity,
 		QuantityUsed:      Reward3QuantityUsed,
+		Approved:          Reward3Approved,
 	})
 	if err != nil {
 		log.Printf("[MockGetRewardsByMerchantId] CreateUser err: %v", err)

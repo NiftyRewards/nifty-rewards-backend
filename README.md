@@ -147,7 +147,7 @@ campaigns: Campaign[]
 
 ### Collection Owner
 
-[**POST**] /collectionowner/add
+[**POST**] ✅/collectionowner/add
 
 Adds collection to merchant. Only owner of collection can do this
 The owner of the collection will be able to approve the merchant to use it to apply discounts. Approval can only happen after merchant has requested for a collaboration

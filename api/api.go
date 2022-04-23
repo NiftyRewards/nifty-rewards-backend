@@ -17,23 +17,19 @@ func NewAPI(pgdb *pg.DB) *chi.Mux {
 		r.Post("/bind/{address_w3a}/{address_to_bind}", PostUpsertBinding)
 		r.Get("/rewards/{merchant_id}", GetRewardsByMerchantId)
 		r.Put("/rewards/{reward_id}", PutRewardByRewardId)
-		// TODO:
 		r.Get("/nfts/{address_w3a}", GetNftsOfAccount)
 	})
 
 	r.Route("/merchants", func(r chi.Router) {
 		r.Get("/", GetAllMerchants)
-		r.Post("/startcampaign", PostRewards)
-		r.Get("/campaigns/{merchant_id}", GetAllCampaignsByMerchantId)
 	})
 
 	r.Route("/merchant", func(r chi.Router) {
-		// TODO:
+		r.Get("/campaigns/{merchant_id}", GetAllCampaignsByMerchantId)
 		r.Post("/startcampaign", PostRewards)
 	})
 
 	r.Route("/collectionowner", func(r chi.Router) {
-		// TODO:
 		r.Post("/add", ApproveCampaigns)
 	})
 

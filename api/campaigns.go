@@ -71,6 +71,27 @@ func ApproveCampaigns(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 
+	// Update rewards to approved
+	rewards, err := db.GetAllRewardsByMerchantIdCollectionAddress(pgdb, req.MerchantId, req.CollectionAddress)
+	for _, rew := range rewards {
+		newRew := &db.Rewards{
+			RewardId:          rew.RewardId,
+			MerchantId:        rew.MerchantId,
+			CollectionAddress: rew.CollectionAddress,
+			TokenId:           rew.TokenId,
+			Description:       rew.Description,
+			MaxQuantity:       rew.MaxQuantity,
+			QuantityUsed:      rew.QuantityUsed,
+			Approved:          true,
+		}
+
+		_, err := db.UpdateReward(pgdb, newRew)
+		if err != nil {
+			log.Printf("GetCampaignsByMerchantId err3: %v\n", err)
+			w = rewardErrResponse(err, w)
+			return
+		}
+	}
 }
 
 func GetAllCampaignsByMerchantId(w http.ResponseWriter, r *http.Request) {
