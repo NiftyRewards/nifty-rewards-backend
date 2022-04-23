@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"github.com/go-pg/pg/v10"
 )
 
@@ -9,7 +10,16 @@ type Merchants struct {
 	MerchantName string `json:"merchant_name"`
 }
 
-func GetMerchant(db *pg.DB, merchantName string) (*Merchants, error) {
+func GetMerchantById(db *pg.DB, merchantId int) (*Merchants, error) {
+	merchant := &Merchants{}
+	err := db.Model(merchant).
+		Where("merchants.merchant_id = ?", merchantId).
+		Select()
+
+	return merchant, err
+}
+
+func GetMerchantByName(db *pg.DB, merchantName string) (*Merchants, error) {
 	merchant := &Merchants{}
 	err := db.Model(merchant).
 		Where("merchants.merchant_name = ?", merchantName).
@@ -38,4 +48,17 @@ func CreateMerchant(db *pg.DB, req Merchants) (*Merchants, error) {
 		Select()
 
 	return merchant, err
+}
+
+func DeleteMerchant(db *pg.DB, merchantName string) error {
+	_, err := GetMerchantByName(db, merchantName)
+
+	// If merchants not found skip
+	if errors.Is(err, pg.ErrNoRows) {
+		return nil
+	}
+
+	merchants := &Merchants{}
+	_, err = db.Model(merchants).Where("merchants.merchant_name = ?", merchantName).Delete()
+	return nil
 }

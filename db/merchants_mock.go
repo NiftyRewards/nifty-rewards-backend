@@ -11,7 +11,7 @@ const SecondMerchantName = "merchant2"
 const SecondMerchantID = 2
 
 func MockGetMerchant(db *pg.DB) bool {
-	merchant, err := GetMerchant(db, FirstMerchantName)
+	merchant, err := GetMerchantByName(db, FirstMerchantName)
 	if err != nil {
 		log.Printf("[MockGetMerchant] GetMerchant err: %v", err)
 	}
@@ -37,7 +37,7 @@ func MockCreateMerchant(db *pg.DB) bool {
 		log.Printf("[MockCreateMerchant] CreateUser err: %v", err)
 	}
 
-	merchant, err := GetMerchant(db, SecondMerchantName)
+	merchant, err := GetMerchantByName(db, SecondMerchantName)
 	if err != nil {
 		log.Printf("[MockCreateMerchant] GetMerchant: %v", err)
 	}

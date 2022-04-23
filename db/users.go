@@ -84,3 +84,16 @@ func UpsertUser(db *pg.DB, req *Users) (*Users, error) {
 
 	return nil, err
 }
+
+func DeleteUser(db *pg.DB, AddressW3a string) error {
+	_, err := GetUser(db, AddressW3a)
+
+	// If user not found skip
+	if errors.Is(err, pg.ErrNoRows) {
+		return nil
+	}
+
+	user := &Users{}
+	_, err = db.Model(user).Where("users.address_w3a = ?", AddressW3a).Delete()
+	return nil
+}
