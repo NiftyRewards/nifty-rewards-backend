@@ -53,4 +53,10 @@ func main() {
 	if !db.MockCreateCampaign(dbInst) {
 		panic(err)
 	}
+	if !db.MockGetReward(dbInst) {
+		panic(err)
+	}
+	if !db.MockCreateReward(dbInst) {
+		panic(err)
+	}
 }
