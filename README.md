@@ -60,6 +60,9 @@ Only owner of rewards_id can redeem
 
 Reduce quantity by 1
 Increase quantity_used by 1
+
+<br/>
+<br/>
 <br/>
 ### Merchant
 
