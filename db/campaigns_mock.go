@@ -8,11 +8,11 @@ import (
 
 const Campaign1Id = 1
 const Campaign1Merchant = 1
-const Campaign1Address = "0x9999999"
+const Campaign1Address = "0xBAYC"
 
 const Campaign2Id = 2
 const Campaign2Merchant = 2
-const Campaign2Address = "0x111111"
+const Campaign2Address = "0xCryptoPunks"
 
 var StartTime = time.Now().Round(time.Microsecond)
 var EndTime = time.Now().Round(time.Microsecond)
@@ -41,7 +41,7 @@ func MockGetCampaign(db *pg.DB) bool {
 }
 
 func MockCreateCampaign(db *pg.DB) bool {
-	err = CreateCampaign(db, Campaigns{
+	campaign, err := CreateCampaign(db, Campaigns{
 		MerchantId:        Campaign2Merchant,
 		CollectionAddress: Campaign2Address,
 		StartTime:         StartTime,
@@ -49,11 +49,6 @@ func MockCreateCampaign(db *pg.DB) bool {
 	})
 	if err != nil {
 		log.Printf("[MockCreateCampaign] CreateUser err: %v", err)
-	}
-
-	campaign, err := GetCampaign(db, Campaign2Id)
-	if err != nil {
-		log.Printf("[MockCreateCampaign] GetCampaign: %v", err)
 	}
 
 	if campaign.CampaignId != Campaign2Id {

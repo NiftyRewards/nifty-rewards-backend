@@ -18,7 +18,7 @@ Users (**address_w3a**, address_b)
 
 ### Relationships
 
-Campaign (**campaign_id**, _merchant_id_, _collection_address_, start_time, duration)
+Campaign (**campaign_id**, _merchant_id_, _collection_address_, start_time, end_time)
 
 Rewards (**rewards_id**, _merchant_id_, _collection_address_, token_id, description, quantity, quantity_used, approved)
 
@@ -90,7 +90,7 @@ merchants: Mechant[]
 
 <br/>
 
-[**POST**] /merchant/startcampaign
+[**POST**] ✅/merchant/startcampaign
 
 Request to start a campaign with a collection.
 
@@ -102,10 +102,25 @@ Reward {
 }
 
 body:
-collection_address: String
-start_date: datetime
-end_date: datetime
-rewards: Reward[]
+{
+	"merchant_id": 2,
+	"collection_address": "0x123",
+	"start_time": 1650732173,
+	"end_time": 1650732174,
+	"rewards": [{
+			"description": "first_reward",
+			"quantity": 4
+		},
+		{
+			"description": "second_reward",
+			"quantity": 5
+		},
+		{
+			"description": "third_reward",
+			"quantity": 3
+		}
+	]
+}
 
 ```
 

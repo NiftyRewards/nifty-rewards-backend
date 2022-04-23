@@ -7,7 +7,7 @@ import (
 
 const Reward1Id = 1
 const Reward1Merchant = 1
-const Reward1Address = "0x9999999"
+const Reward1Address = "0xBAYC"
 const Reward1TokenId = 555
 const Reward1Desc = "rewards1_desc"
 const Reward1MaxQuantity = 4
@@ -15,7 +15,7 @@ const Reward1QuantityUsed = 0
 
 const Reward2Id = 2
 const Reward2Merchant = 2
-const Reward2Address = "0x111111"
+const Reward2Address = "0xCryptoPunks"
 const Reward2TokenId = 111
 const Reward2Desc = "rewards2_desc"
 const Reward2MaxQuantity = 2
@@ -23,7 +23,7 @@ const Reward2QuantityUsed = 1
 
 const Reward3Id = 3
 const Reward3Merchant = 2
-const Reward3Address = "0x111111"
+const Reward3Address = "0xCryptoPunks"
 const Reward3TokenId = 112
 const Reward3Desc = "rewards3_desc"
 const Reward3MaxQuantity = 2
@@ -31,7 +31,7 @@ const Reward3QuantityUsed = 1
 
 const Reward4Id = 4
 const Reward4Merchant = 2
-const Reward4Address = "0x111111"
+const Reward4Address = "0xCryptoPunks"
 const Reward4TokenId = 113
 const Reward4Desc = "rewards4_desc"
 const Reward4MaxQuantity = 2
@@ -86,12 +86,14 @@ func MockCreateReward(db *pg.DB) bool {
 		QuantityUsed:      Reward2QuantityUsed,
 	})
 	if err != nil {
-		log.Printf("[MockCreateReward] CreateUser err: %v", err)
+		log.Printf("[MockCreateReward] CreateReward err: %v", err)
+		return false
 	}
 
 	reward, err := GetReward(db, Reward2Id)
 	if err != nil {
 		log.Printf("[MockCreateReward] GetReward: %v", err)
+		return false
 	}
 
 	if reward.RewardId != Reward2Id {
@@ -173,7 +175,8 @@ func MockUpdateReward(db *pg.DB) bool {
 		QuantityUsed:      Reward4QuantityUsed,
 	})
 	if err != nil {
-		log.Printf("[MockUpdateReward] CreateUser err: %v", err)
+		log.Printf("[MockUpdateReward] UpdateReward err: %v", err)
+		return false
 	}
 	if reward.RewardId != Reward4Id {
 		log.Printf("reward.RewardId != Reward4Id")

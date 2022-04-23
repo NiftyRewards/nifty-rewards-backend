@@ -6,9 +6,9 @@ CREATE TABLE IF NOT EXISTS rewards
     token_id           INT     NOT NULL,
     description        VARCHAR NOT NULL,
     max_quantity       INT     NOT NULL,
-    quantity_used      INT
+    quantity_used      INT DEFAULT 0
 );
 
 INSERT INTO rewards (merchant_id, collection_address, token_id, description, max_quantity, quantity_used)
-VALUES (1, '0x9999999', 555, 'rewards1_desc', 4, 0);
+VALUES (1, '0xBAYC', 555, 'rewards1_desc', 4, 0);
 

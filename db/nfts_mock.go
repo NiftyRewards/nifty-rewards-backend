@@ -5,12 +5,12 @@ import (
 	"log"
 )
 
-const FirstNftAddress = "0x9999999"
+const FirstNftAddress = "0xBAYC"
 const FirstNftName = "bayc"
-const FirstNftSupply = 9999
-const SecondNftAddress = "0x111111"
+const FirstNftSupply = 10
+const SecondNftAddress = "0xCryptoPunks"
 const SecondNftName = "cryptopunks"
-const SecondNftSupply = 1111
+const SecondNftSupply = 5
 
 func MockGetNft(db *pg.DB) bool {
 	nft, err := GetNft(db, FirstNftAddress)

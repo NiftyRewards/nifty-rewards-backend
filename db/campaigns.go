@@ -30,10 +30,22 @@ func GetCampaigns(db *pg.DB) ([]*Campaigns, error) {
 	return campaigns, err
 }
 
-func CreateCampaign(db *pg.DB, req Campaigns) error {
+func CreateCampaign(db *pg.DB, req Campaigns) (*Campaigns, error) {
 	_, err := db.Model(&req).Insert()
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+
+	campaign := &Campaigns{}
+	err = db.Model(campaign).
+		Where("campaigns.collection_address = ?", req.CollectionAddress).
+		Where("campaigns.merchant_id = ?", req.MerchantId).
+		Where("campaigns.start_time = ?", req.StartTime).
+		Where("campaigns.end_time = ?", req.EndTime).
+		Select()
+	if err != nil {
+		return nil, err
+	}
+
+	return campaign, nil
 }
