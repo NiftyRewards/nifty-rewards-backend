@@ -18,7 +18,7 @@ func NewAPI(pgdb *pg.DB) *chi.Mux {
 		r.Get("/rewards/{merchant_id}", GetRewardsByMerchantId)
 		r.Put("/rewards/{reward_id}", PutRewardByRewardId)
 		// TODO:
-		// r.Get("/nfts/{address_w3a}", GetNftsOfAccount)
+		r.Get("/nfts/{address_w3a}", GetNftsOfAccount)
 		// r.Put("/rewards/redeem", RedeemReward")
 	})
 
