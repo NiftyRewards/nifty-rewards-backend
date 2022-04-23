@@ -9,6 +9,7 @@ import (
 const Campaign1Id = 1
 const Campaign1Merchant = 1
 const Campaign1Address = "0x9999999"
+
 const Campaign2Id = 2
 const Campaign2Merchant = 2
 const Campaign2Address = "0x111111"
@@ -40,7 +41,7 @@ func MockGetCampaign(db *pg.DB) bool {
 }
 
 func MockCreateCampaign(db *pg.DB) bool {
-	_, err := CreateCampaign(db, Campaigns{
+	err = CreateCampaign(db, Campaigns{
 		MerchantId:        Campaign2Merchant,
 		CollectionAddress: Campaign2Address,
 		StartTime:         StartTime,

@@ -16,7 +16,7 @@ func NewAPI(pgdb *pg.DB) *chi.Mux {
 	r.Route("/users", func(r chi.Router) {
 		r.Post("/bind/{address_w3a}/{address_to_bind}", PostUpsertBinding)
 		r.Get("/rewards/{merchant_id}", GetRewardsByMerchantId)
-		r.Get("/rewards/{merchant_id}", GetRewardsByMerchantId)
+		r.Put("/rewards/{reward_id}", PutRewardByRewardId)
 	})
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {

@@ -40,8 +40,17 @@ func GetRewardsByMerchantId(db *pg.DB, merchantId int) ([]*Rewards, error) {
 	return rewards, err
 }
 
-func CreateReward(db *pg.DB, req Rewards) (*Rewards, error) {
+func CreateReward(db *pg.DB, req Rewards) error {
 	_, err := db.Model(&req).Insert()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpdateReward(db *pg.DB, req *Rewards) (*Rewards, error) {
+	_, err := db.Model(req).WherePK().Update()
 	if err != nil {
 		return nil, err
 	}

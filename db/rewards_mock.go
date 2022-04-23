@@ -29,6 +29,14 @@ const Reward3Desc = "rewards3_desc"
 const Reward3MaxQuantity = 2
 const Reward3QuantityUsed = 1
 
+const Reward4Id = 4
+const Reward4Merchant = 2
+const Reward4Address = "0x111111"
+const Reward4TokenId = 113
+const Reward4Desc = "rewards4_desc"
+const Reward4MaxQuantity = 2
+const Reward4QuantityUsed = 1
+
 func MockGetReward(db *pg.DB) bool {
 	reward, err := GetReward(db, Reward1Id)
 	if err != nil {
@@ -69,7 +77,7 @@ func MockGetReward(db *pg.DB) bool {
 }
 
 func MockCreateReward(db *pg.DB) bool {
-	_, err := CreateReward(db, Rewards{
+	err = CreateReward(db, Rewards{
 		MerchantId:        Reward2Merchant,
 		CollectionAddress: Reward2Address,
 		TokenId:           Reward2TokenId,
@@ -120,7 +128,7 @@ func MockCreateReward(db *pg.DB) bool {
 }
 
 func MockGetRewardsByMerchantId(db *pg.DB) bool {
-	_, err := CreateReward(db, Rewards{
+	err = CreateReward(db, Rewards{
 		MerchantId:        Reward3Merchant,
 		CollectionAddress: Reward3Address,
 		TokenId:           Reward3TokenId,
@@ -142,5 +150,60 @@ func MockGetRewardsByMerchantId(db *pg.DB) bool {
 	}
 
 	log.Printf("MockGetRewardsByMerchantId passed")
+	return true
+}
+
+func MockUpdateReward(db *pg.DB) bool {
+	err = CreateReward(db, Rewards{
+		MerchantId:        Reward4Merchant,
+		CollectionAddress: Reward3Address,
+		TokenId:           Reward3TokenId,
+		Description:       Reward3Desc,
+		MaxQuantity:       Reward3MaxQuantity,
+		QuantityUsed:      Reward3QuantityUsed,
+	})
+
+	reward, err := UpdateReward(db, &Rewards{
+		RewardId:          Reward4Id,
+		MerchantId:        Reward4Merchant,
+		CollectionAddress: Reward4Address,
+		TokenId:           Reward4TokenId,
+		Description:       Reward4Desc,
+		MaxQuantity:       Reward4MaxQuantity,
+		QuantityUsed:      Reward4QuantityUsed,
+	})
+	if err != nil {
+		log.Printf("[MockUpdateReward] CreateUser err: %v", err)
+	}
+	if reward.RewardId != Reward4Id {
+		log.Printf("reward.RewardId != Reward4Id")
+		return false
+	}
+	if reward.MerchantId != Reward4Merchant {
+		log.Printf("reward.MerchantId != Reward4Merchant")
+		return false
+	}
+	if reward.CollectionAddress != Reward4Address {
+		log.Printf("reward.CollectionAddress != Reward4Address")
+		return false
+	}
+	if reward.TokenId != Reward4TokenId {
+		log.Printf("reward.TokenId != Reward4TokenId")
+		return false
+	}
+	if reward.Description != Reward4Desc {
+		log.Printf("reward.Description != Reward4Desc")
+		return false
+	}
+	if reward.MaxQuantity != Reward4MaxQuantity {
+		log.Printf("reward.MaxQuantity != Reward4MaxQuantity")
+		return false
+	}
+	if reward.QuantityUsed != Reward4QuantityUsed {
+		log.Printf("reward.QuantityUsed != Reward4QuantityUsed")
+		return false
+	}
+
+	log.Printf("MockUpdateReward passed")
 	return true
 }

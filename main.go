@@ -81,6 +81,9 @@ func main() {
 	if !db.MockGetRewardsByMerchantId(dbInst) {
 		panic(err)
 	}
+	if !db.MockUpdateReward(dbInst) {
+		panic(err)
+	}
 
 	//Start server
 	router := api.NewAPI(dbInst)

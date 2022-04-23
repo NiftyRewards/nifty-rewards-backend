@@ -2,11 +2,11 @@ CREATE TABLE IF NOT EXISTS rewards
 (
     reward_id          SERIAL PRIMARY KEY,
     merchant_id        INT REFERENCES merchants (merchant_id),
-    collection_address VARCHAR REFERENCES Nfts (collection_address),
+    collection_address VARCHAR REFERENCES nfts (collection_address),
     token_id           INT     NOT NULL,
     description        VARCHAR NOT NULL,
     max_quantity       INT     NOT NULL,
-    quantity_used      INT     NOT NULL
+    quantity_used      INT
 );
 
 INSERT INTO rewards (merchant_id, collection_address, token_id, description, max_quantity, quantity_used)
