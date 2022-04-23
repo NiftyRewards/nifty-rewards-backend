@@ -3,11 +3,15 @@ package api
 import (
 	"encoding/json"
 	"errors"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-pg/pg/v10"
+	"fmt"
 	"golang-server/db"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-pg/pg/v10"
 )
 
 type UserResponse struct {
@@ -102,11 +106,6 @@ func GetNftsOfAccount(w http.ResponseWriter, r *http.Request) {
 
 	// Address Sanitation??uu
 
-	// Call Tatum
-	response, err := http.Get("https://api-eu1.tatum.io/v3/nft/address/balance/MATIC/" + addressW3a)
-
-	log.Printf("%v", response)
-
 	// get the database from context
 	pgdb, ok := r.Context().Value("DB").(*pg.DB)
 	if !ok {
@@ -121,13 +120,25 @@ func GetNftsOfAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	address_b := user.Address_B
+
+	// Call Tatum
+	apiKey := os.Getenv("TATUM")
+	url := "https://api-eu1.tatum.io/v3/nft/address/balance/MATIC/" + address_b
+
+	req, _ := http.NewRequest("GET", url, nil)
+
+	req.Header.Add("x-api-key", apiKey)
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := ioutil.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
 
 	// return a response
-	res := &UserResponse{
-		Success: true,
-		Error:   "",
-		User:    user,
-	}
 	_ = json.NewEncoder(w).Encode(res)
 	w.WriteHeader(http.StatusOK)
 }
