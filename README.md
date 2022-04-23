@@ -65,8 +65,10 @@ Only owner of rewards_id can redeem
 
 Reduce quantity by 1
 Increase quantity_used by 1
+
 <br/>
 <br/>
+
 ### Merchant
 
 [**GET**] /merchants
@@ -77,6 +79,7 @@ Get list of merchants.
 returns:
 merchants: Mechant[]
 ```
+<br/>
 
 [**POST**] /merchant/startcampaign
 
@@ -97,6 +100,8 @@ collection_address: String
 - If ownerOf() Collection address is equals to the recovered address of the signature, the collection will be binded.
 ```
 
+<br/>
+
 [**GET**] /merchant/campaigns
 Retrieves all campaigns that a merchant has
 
@@ -104,6 +109,7 @@ Retrieves all campaigns that a merchant has
 returns:
 campaigns: Campaign[]
 ```
+<br/>
 
 [**POST**] /merchant/addrewards
 
@@ -116,6 +122,8 @@ body:
 collection_address: String
 description: String
 ```
+<br/>
+<br/>
 
 ### Collection Owner
 
