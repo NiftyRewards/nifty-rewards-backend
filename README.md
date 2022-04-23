@@ -136,7 +136,7 @@ body:
 
 <br/>
 
-[**GET**] /merchant/campaigns
+[**GET**] ✅/merchant/campaigns/{merchant_id}
 Retrieves all campaigns that a merchant has
 
 ```txt

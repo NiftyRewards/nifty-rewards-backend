@@ -21,6 +21,7 @@ func NewAPI(pgdb *pg.DB) *chi.Mux {
 	r.Route("/merchants", func(r chi.Router) {
 		r.Get("/", GetAllMerchants)
 		r.Post("/startcampaign", PostCampaigns)
+		r.Get("/campaigns/{merchant_id}", GetCampaignsByMerchantId)
 	})
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {

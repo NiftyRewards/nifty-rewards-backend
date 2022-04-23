@@ -30,6 +30,15 @@ func GetCampaigns(db *pg.DB) ([]*Campaigns, error) {
 	return campaigns, err
 }
 
+func GetCampaignsByMerchantId(db *pg.DB, merchantId int) ([]*Campaigns, error) {
+	campaigns := make([]*Campaigns, 0)
+	err := db.Model(&campaigns).
+		Where("campaigns.merchant_id = ?", merchantId).
+		Select()
+
+	return campaigns, err
+}
+
 func CreateCampaign(db *pg.DB, req Campaigns) (*Campaigns, error) {
 	_, err := db.Model(&req).Insert()
 	if err != nil {

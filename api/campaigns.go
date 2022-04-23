@@ -4,12 +4,20 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-pg/pg/v10"
 	"golang-server/db"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
+
+type CampaignsResponse struct {
+	Success   bool            `json:"success"`
+	Error     string          `json:"err"`
+	Campaigns []*db.Campaigns `json:"rewards"`
+}
 
 type StartCampaignsRequest struct {
 	MerchantId        int             `json:"merchant_id"`
@@ -106,6 +114,41 @@ func PostCampaigns(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(res)
 	if err != nil {
 		log.Printf("GetRewardsByCampaignId err3: %v\n", err)
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
+func GetCampaignsByMerchantId(w http.ResponseWriter, r *http.Request) {
+	merchantId, err := strconv.Atoi(chi.URLParam(r, "merchant_id"))
+	if err != nil {
+		log.Printf("GetCampaignsByMerchantId err1: %v\n", err)
+		w = rewardErrResponse(err, w)
+		return
+	}
+
+	// get the database from context
+	pgdb, ok := r.Context().Value("DB").(*pg.DB)
+	if !ok {
+		w = rewardErrResponse(errors.New("could not get database from context"), w)
+		return
+	}
+	// query for the reward
+	campaigns, err := db.GetCampaignsByMerchantId(pgdb, merchantId)
+	if err != nil {
+		log.Printf("GetCampaignsByMerchantId err2: %v\n", err)
+		w = rewardErrResponse(err, w)
+		return
+	}
+
+	// return a response
+	res := &CampaignsResponse{
+		Success:   true,
+		Error:     "",
+		Campaigns: campaigns,
+	}
+	err = json.NewEncoder(w).Encode(res)
+	if err != nil {
+		log.Printf("GetCampaignsByMerchantId err3: %v\n", err)
 	}
 	w.WriteHeader(http.StatusOK)
 }
