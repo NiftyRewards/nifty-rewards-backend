@@ -4,38 +4,39 @@ import (
 	"github.com/go-pg/pg/v10"
 )
 
-type Merchants struct {
-	MerchantId   int    `pg:",pk" json:"merchant_id"`
-	MerchantName string `json:"merchant_name"`
+type Nfts struct {
+	CollectionAddress string `pg:",pk" json:"collection_address"`
+	CollectionName    string `json:"collection_name"`
+	TotalSupply       int    `json:"total_supply"`
 }
 
-func GetMerchant(db *pg.DB, merchantName string) (*Merchants, error) {
-	merchant := &Merchants{}
-	err := db.Model(merchant).
-		Where("merchants.merchant_name = ?", merchantName).
+func GetNft(db *pg.DB, collectionAddress string) (*Nfts, error) {
+	nft := &Nfts{}
+	err := db.Model(nft).
+		Where("nfts.collection_address = ?", collectionAddress).
 		Select()
 
-	return merchant, err
+	return nft, err
 }
 
-func GetMerchants(db *pg.DB) ([]*Merchants, error) {
-	merchants := make([]*Merchants, 0)
-	err := db.Model(&merchants).
+func GetNfts(db *pg.DB) ([]*Nfts, error) {
+	nfts := make([]*Nfts, 0)
+	err := db.Model(&nfts).
 		Select()
 
-	return merchants, err
+	return nfts, err
 }
 
-func CreateMerchant(db *pg.DB, req Merchants) (*Merchants, error) {
+func CreateNft(db *pg.DB, req Nfts) (*Nfts, error) {
 	_, err := db.Model(&req).Insert()
 	if err != nil {
 		return nil, err
 	}
 
-	merchant := &Merchants{}
-	err = db.Model(merchant).
-		Where("merchants.merchant_name = ?", req.MerchantName).
+	nft := &Nfts{}
+	err = db.Model(nft).
+		Where("nfts.collection_address = ?", req.CollectionAddress).
 		Select()
 
-	return merchant, err
+	return nft, err
 }

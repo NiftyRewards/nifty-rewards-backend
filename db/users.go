@@ -26,11 +26,7 @@ func GetUsers(db *pg.DB) ([]*Users, error) {
 	return users, err
 }
 
-func CreateUser(db *pg.DB, addressW3a string) (*Users, error) {
-	req := Users{
-		AddressW3a: addressW3a,
-	}
-
+func CreateUser(db *pg.DB, req Users) (*Users, error) {
 	_, err := db.Model(&req).Insert()
 	if err != nil {
 		return nil, err
@@ -38,7 +34,7 @@ func CreateUser(db *pg.DB, addressW3a string) (*Users, error) {
 
 	user := &Users{}
 	err = db.Model(user).
-		Where("users.address_w3a = ?", addressW3a).
+		Where("users.address_w3a = ?", req.AddressW3a).
 		Select()
 
 	return user, err

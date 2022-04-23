@@ -5,52 +5,64 @@ import (
 	"log"
 )
 
-const FirstMerchantName = "merchant1"
-const FirstMerchantID = 1
-const SecondMerchantName = "merchant2"
-const SecondMerchantID = 2
+const FirstNftAddress = "0x9999999"
+const FirstNftName = "bayc"
+const FirstNftSupply = 9999
+const SecondNftAddress = "0x111111"
+const SecondNftName = "cryptopunks"
+const SecondNftSupply = 1111
 
-func MockGetMerchant(db *pg.DB) bool {
-	merchant, err := GetMerchant(db, FirstMerchantName)
+func MockGetNft(db *pg.DB) bool {
+	nft, err := GetNft(db, FirstNftAddress)
 	if err != nil {
-		log.Printf("[MockGetMerchant] GetMerchant err: %v", err)
+		log.Printf("[MockGetNft] GetNft err: %v", err)
 	}
 
-	if merchant.MerchantName != FirstMerchantName {
-		log.Printf("merchant.MerchantName != FirstMerchantName")
+	if nft.CollectionAddress != FirstNftAddress {
+		log.Printf("nft.CollectionAddress != FirstNftAddress")
 		return false
 	}
-	if merchant.MerchantId != FirstMerchantID {
-		log.Printf("merchant.MerchantId != FirstMerchantID")
+	if nft.CollectionName != FirstNftName {
+		log.Printf("nft.CollectionName != FirstNftName")
+		return false
+	}
+	if nft.TotalSupply != FirstNftSupply {
+		log.Printf("nft.TotalSupply != FirstNftSupply")
 		return false
 	}
 
-	log.Printf("MockGetMerchant passed")
+	log.Printf("MockGetNft passed")
 	return true
 }
 
-func MockCreateMerchant(db *pg.DB) bool {
-	_, err := CreateMerchant(db, Merchants{
-		MerchantName: SecondMerchantName,
+func MockCreateNft(db *pg.DB) bool {
+	_, err := CreateNft(db, Nfts{
+		CollectionAddress: SecondNftAddress,
+		CollectionName:    SecondNftName,
+		TotalSupply:       SecondNftSupply,
 	})
 	if err != nil {
-		log.Printf("[MockCreateMerchant] CreateUser err: %v", err)
+		log.Printf("[MockCreateNft] CreateNft err: %v", err)
 	}
 
-	merchant, err := GetMerchant(db, SecondMerchantName)
+	nft, err := GetNft(db, SecondNftAddress)
 	if err != nil {
-		log.Printf("[MockCreateMerchant] GetMerchant: %v", err)
+		log.Printf("[MockCreateNft] GetNft: %v", err)
 	}
 
-	if merchant.MerchantName != SecondMerchantName {
-		log.Printf("merchant.MerchantName != SecondMerchantName")
+	if nft.CollectionAddress != SecondNftAddress {
+		log.Printf("nft.CollectionAddress != SecondNftAddress")
 		return false
 	}
-	if merchant.MerchantId != SecondMerchantID {
-		log.Printf("merchant.MerchantId != SecondMerchantID")
+	if nft.CollectionName != SecondNftName {
+		log.Printf("nft.CollectionName != SecondNftName")
+		return false
+	}
+	if nft.TotalSupply != SecondNftSupply {
+		log.Printf("nft.TotalSupply != SecondNftSupply")
 		return false
 	}
 
-	log.Printf("MockCreateMerchant passed")
+	log.Printf("MockCreateNft passed")
 	return true
 }

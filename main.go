@@ -35,4 +35,16 @@ func main() {
 	if !db.MockCreateUser(dbInst) {
 		panic(err)
 	}
+	if !db.MockGetMerchant(dbInst) {
+		panic(err)
+	}
+	if !db.MockCreateMerchant(dbInst) {
+		panic(err)
+	}
+	if !db.MockGetNft(dbInst) {
+		panic(err)
+	}
+	if !db.MockCreateNft(dbInst) {
+		panic(err)
+	}
 }
