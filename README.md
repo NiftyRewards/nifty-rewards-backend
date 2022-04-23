@@ -58,7 +58,7 @@ Data is populated from request to Tatum
 
 [https://apidoc.tatum.io/#operation/NftGetTokensByAddressErc721]
 
-[**PUT**] /user/rewards/redeem
+[**PUT**] ✅/user/redeem/{address_w3a}/{rewards_id}
 Redeems rewards based on rewards_id
 
 Only owner of rewards_id can redeem
