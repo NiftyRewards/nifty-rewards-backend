@@ -4,7 +4,7 @@ Backend server created in Golang to provide an API interface for interaction wit
 
 ## Database Design
 
-TODO: Insert Image here
+![database-design](docs/database.drawio.svg)
 
 ### Entities
 
@@ -58,14 +58,23 @@ Data is populated from request to Tatum
 
 [https://apidoc.tatum.io/#operation/NftGetTokensByAddressErc721]
 
-<br/>
-
-[**POST**] /user/rewards/{merchant_id}/redeem
+[**PUT**] /user/rewards/redeem
 Redeems rewards based on rewards_id
 
 Only owner of rewards_id can redeem
 
-Reduce quantity by 1
+```txt
+params:
+reward_id: Number
+
+returns:
+200: Success
+400: User is not the owner of reward_id = {reward_id}
+400: Reward Id does not exist
+400: Reward has been fully redeemed
+```
+
+Reduce quantity by 1, quantity cannot fall below 0
 Increase quantity_used by 1
 
 <br/>
@@ -81,6 +90,7 @@ Get list of merchants.
 returns:
 merchants: Mechant[]
 ```
+
 <br/>
 
 [**POST**] /merchant/startcampaign
@@ -111,6 +121,7 @@ Retrieves all campaigns that a merchant has
 returns:
 campaigns: Campaign[]
 ```
+
 <br/>
 
 [**POST**] /merchant/addrewards
@@ -124,6 +135,7 @@ body:
 collection_address: String
 description: String
 ```
+
 <br/>
 <br/>
 
@@ -137,6 +149,15 @@ The owner of the collection will be able to approve the merchant to use it to ap
 ```txt
 body:
 merchant_address: String
+collection_address: String
+signature: String
+
+returns:
+200: Successfully approved campaign
+400: Signer is not the collection owner
+400: Collection does not exist
+400: Invalid Signature
+400: No pending campaign
 ```
 
 ## User Flows
@@ -149,11 +170,21 @@ merchant_address: String
 
 ![user-registration-new](/docs/user-registration-new.drawio.svg)
 
+### User Reward Redemption
+
+![user-reward-redemption](docs/user-redeem-rewards.drawio.svg)
+
 ### Merchant Account Registration
+
+![merchant-registration](docs/merchant-registration.drawio.svg)
 
 ### Merchant - Start a Campaign
 
+![merchant-start-campaign](docs/merchant-start-campaign.drawio.svg)
+
 ### Collection Owner - Approve a Campaign
+
+![collectionowner-approve-compaign](docs/collectionowner-approve-campaign.drawio.svg)
 
 ## Sponsor Challenges
 
