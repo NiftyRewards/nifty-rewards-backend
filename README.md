@@ -8,7 +8,7 @@ TODO: Insert Image here
 
 ### Entities
 
-Merchants(**merchant_id**, merchant_name)
+Merchants (**merchant_id**, merchant_name)
 
 NFTs (**collection_address**, collection_name)
 
@@ -42,9 +42,17 @@ Returns a list of user’s NFTS in the wallet.
 
 Data is populated from request to Tatum
 
+[**GET**] /user/rewards/{merchant_id}
+
+Gets all the rewards available filtered by the merchant_id
+
+Returns a list of user’s NFTS in the wallet.
+
+Data is populated from request to Tatum
+
 [https://apidoc.tatum.io/#operation/NftGetTokensByAddressErc721]
 
-[**POST**] /user/rewards/redeem
+[**POST**] /user/rewards/{merchant_id}/redeem
 Redeems rewards based on rewards_id
 
 Only owner of rewards_id can redeem
@@ -53,6 +61,15 @@ Reduce quantity by 1
 Increase quantity_used by 1
 
 ### Merchant
+
+[**GET**] /merchants
+
+Get list of merchants.
+
+```txt
+returns:
+merchants: Mechant[]
+```
 
 [**POST**] /merchant/startcampaign
 
@@ -104,3 +121,27 @@ The owner of the collection will be able to approve the merchant to use it to ap
 body:
 merchant_address: String
 ```
+
+## User Flows
+
+### User Account Registration (Existing NFT Holder)
+
+![user-registration-existing](/docs/user-registration-existing.drawio.svg)
+
+### User Account Registration (New to NFTs)
+
+![user-registration-new](/docs/user-registration-new.drawio.svg)
+
+### Merchant Account Registration
+
+### Merchant - Start a Campaign
+
+### Collection Owner - Approve a Campaign
+
+## Sponsor Challenges
+
+### Web3Auth
+
+We are exclusively using Web3Auth as the main mode of login and authentication for our application. Using Web3Auth, we are able to allow users to easily on-board our platform with a crypto wallet, letting them directly have access to purchase NFTs that have loyalty rewards.
+
+We improve the current system by creating a binding/mapping feature that binds existing wallets to the Web3Auth account. This is useful for users who already have NFTs in another wallet.
