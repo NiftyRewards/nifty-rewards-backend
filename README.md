@@ -18,9 +18,7 @@ Users (**address_w3a**, address_b)
 
 Campaign (**campaign_id**, _merchant_id_, _collection_address_, start_time, duration, totalSupply)
 
-Which merchant is collaborating with which NFT
-
-Rewards (**rewards_id**, _merchant_id_, _collection_address_, _ownership_id_, description, quantity, quantity_used)
+Rewards (**rewards_id**, _merchant_id_, _collection_address_, token_id, description, quantity, quantity_used)
 
 ## Endpoints
 
@@ -34,6 +32,7 @@ AUTH: Caller must be the owner of the account associated to address_w3a
 
 Replaces current binded wallet with address_to_bind.
 
+
 [**GET**] /user/nfts/{address_w3a}
 
 Gets all the NFTS
@@ -42,6 +41,7 @@ Returns a list of user’s NFTS in the wallet.
 
 Data is populated from request to Tatum
 
+
 [**GET**] /user/rewards/{merchant_id}
 
 Gets all the rewards available filtered by the merchant_id
@@ -49,6 +49,7 @@ Gets all the rewards available filtered by the merchant_id
 Returns a list of user’s NFTS in the wallet.
 
 Data is populated from request to Tatum
+
 
 [https://apidoc.tatum.io/#operation/NftGetTokensByAddressErc721]
 
@@ -59,6 +60,7 @@ Only owner of rewards_id can redeem
 
 Reduce quantity by 1
 Increase quantity_used by 1
+
 
 ### Merchant
 
