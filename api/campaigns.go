@@ -19,35 +19,23 @@ type CampaignsResponse struct {
 	Campaigns []*db.Campaigns `json:"rewards"`
 }
 
-type StartCampaignsRequest struct {
-	MerchantId        int             `json:"merchant_id"`
-	CollectionAddress string          `json:"collection_address"`
-	StartTime         int64           `json:"start_time"`
-	EndTime           int64           `json:"end_time"`
-	RewardDescs       []rewardDescReq `json:"rewards"`
+type ApproveCampaignRequest struct {
+	MerchantId        int    `json:"merchant_id"`
+	CollectionAddress string `json:"collection_address"`
+	StartTime         int64  `json:"start_time"`
+	EndTime           int64  `json:"end_time"`
 }
 
-type rewardDescReq struct {
-	Description string `json:"description"`
-	MaxQuantity int    `json:"quantity"`
+type ApproveCampaignsResponse struct {
+	Success  bool          `json:"success"`
+	Error    string        `json:"err"`
+	Campaign *db.Campaigns `json:"campaign_id"`
 }
 
-type StartCampaignsResponse struct {
-	Success     bool             `json:"success"`
-	Error       string           `json:"err"`
-	Campaign    db.Campaigns     `json:"campaign_id"`
-	RewardDescs []rewardDescResp `json:"rewards"`
-}
-
-type rewardDescResp struct {
-	Description string `json:"description"`
-	RowsAdded   int    `json:"rows_added"`
-}
-
-func PostCampaigns(w http.ResponseWriter, r *http.Request) {
-	var req StartCampaignsRequest
+func ApproveCampaigns(w http.ResponseWriter, r *http.Request) {
+	var req ApproveCampaignRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		log.Printf("Error whilde decoding StartCampaignsRequest %v\n", err)
+		log.Printf("Error while decoding ApproveCampaignRequest %v\n", err)
 		return
 	}
 
@@ -67,58 +55,25 @@ func PostCampaigns(w http.ResponseWriter, r *http.Request) {
 		StartTime:         time.Unix(req.StartTime, 0),
 		EndTime:           time.Unix(req.EndTime, 0),
 	}
-	gettedCampaign, err := db.CreateCampaign(pgdb, newCampaign)
-
-	//Create rewards for all tokens in a collection
-	campaignNft, err := db.GetNft(pgdb, req.CollectionAddress)
-	if err != nil {
-		w = campaignErrResponse(errors.New(fmt.Sprintf("error getting nft from collection_address(%s)", req.CollectionAddress)), w)
-		return
-	}
-
-	// Prepare response
-	var res StartCampaignsResponse
-
-	// For each reward description, populate reward for all tokens in NFT collection
-	for _, rewardDesc := range req.RewardDescs {
-		tokenIdCounter := 1
-		for tokenIdCounter = 1; tokenIdCounter < campaignNft.TotalSupply; tokenIdCounter++ {
-			newReward := db.Rewards{
-				MerchantId:        req.MerchantId,
-				CollectionAddress: req.CollectionAddress,
-				TokenId:           tokenIdCounter,
-				Description:       rewardDesc.Description,
-				MaxQuantity:       rewardDesc.MaxQuantity,
-				QuantityUsed:      0,
-			}
-			err := db.CreateReward(pgdb, newReward)
-			if err != nil {
-				w = campaignErrResponse(errors.New(fmt.Sprintf("error while populating rewards, reward:(%+v)", newReward)), w)
-				return
-			}
-		}
-
-		// Prepare response
-		res.RewardDescs = append(
-			res.RewardDescs,
-			rewardDescResp{
-				Description: rewardDesc.Description,
-				RowsAdded:   tokenIdCounter,
-			})
-	}
+	createdCampaign, err := db.CreateCampaign(pgdb, newCampaign)
 
 	// return a response
-	res.Campaign = *gettedCampaign
-	res.Success = true
-	res.Error = ""
+	res := &ApproveCampaignsResponse{
+		Success:  true,
+		Error:    "",
+		Campaign: createdCampaign,
+	}
 	err = json.NewEncoder(w).Encode(res)
 	if err != nil {
-		log.Printf("GetRewardsByCampaignId err3: %v\n", err)
+		log.Printf("GetCampaignsByMerchantId err3: %v\n", err)
+		w = rewardErrResponse(err, w)
+		return
 	}
 	w.WriteHeader(http.StatusOK)
+
 }
 
-func GetCampaignsByMerchantId(w http.ResponseWriter, r *http.Request) {
+func GetAllCampaignsByMerchantId(w http.ResponseWriter, r *http.Request) {
 	merchantId, err := strconv.Atoi(chi.URLParam(r, "merchant_id"))
 	if err != nil {
 		log.Printf("GetCampaignsByMerchantId err1: %v\n", err)
@@ -149,15 +104,17 @@ func GetCampaignsByMerchantId(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(res)
 	if err != nil {
 		log.Printf("GetCampaignsByMerchantId err3: %v\n", err)
+		w = rewardErrResponse(err, w)
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 }
 
 func campaignErrResponse(err error, w http.ResponseWriter) http.ResponseWriter {
-	res := &StartCampaignsResponse{
-		Success:     false,
-		Error:       err.Error(),
-		RewardDescs: nil,
+	res := &ApproveCampaignsResponse{
+		Success:  false,
+		Error:    err.Error(),
+		Campaign: nil,
 	}
 	err = json.NewEncoder(w).Encode(res)
 	if err != nil {

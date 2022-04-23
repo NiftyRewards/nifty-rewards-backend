@@ -105,8 +105,6 @@ body:
 {
 	"merchant_id": 2,
 	"collection_address": "0x123",
-	"start_time": 1650732173,
-	"end_time": 1650732174,
 	"rewards": [{
 			"description": "first_reward",
 			"quantity": 4
@@ -145,20 +143,6 @@ campaigns: Campaign[]
 ```
 
 <br/>
-
-[**POST**] /merchant/addrewards
-
-Add a reward for the collection address.
-
-Collection must be approved by collection owner.
-
-```txt
-body:
-collection_address: String
-description: String
-```
-
-<br/>
 <br/>
 
 ### Collection Owner
@@ -170,9 +154,16 @@ The owner of the collection will be able to approve the merchant to use it to ap
 
 ```txt
 body:
-merchant_address: String
+merchant_id: Int
 collection_address: String
 signature: String
+
+{
+	"collection_address": "0xCryptoPunks",
+	"merchant_id": 1,
+	"start_time": 1650732173,
+	"end_time": 1650732174
+}
 
 returns:
 200: Successfully approved campaign

@@ -12,6 +12,7 @@ const Reward1TokenId = 555
 const Reward1Desc = "rewards1_desc"
 const Reward1MaxQuantity = 4
 const Reward1QuantityUsed = 0
+const Reward1Approved = false
 
 const Reward2Id = 2
 const Reward2Merchant = 2
@@ -20,6 +21,7 @@ const Reward2TokenId = 111
 const Reward2Desc = "rewards2_desc"
 const Reward2MaxQuantity = 2
 const Reward2QuantityUsed = 1
+const Reward2Approved = false
 
 const Reward3Id = 3
 const Reward3Merchant = 2
@@ -28,6 +30,7 @@ const Reward3TokenId = 112
 const Reward3Desc = "rewards3_desc"
 const Reward3MaxQuantity = 2
 const Reward3QuantityUsed = 1
+const Reward3Approved = false
 
 const Reward4Id = 4
 const Reward4Merchant = 2
@@ -36,6 +39,7 @@ const Reward4TokenId = 113
 const Reward4Desc = "rewards4_desc"
 const Reward4MaxQuantity = 2
 const Reward4QuantityUsed = 1
+const Reward4Approved = false
 
 func MockGetReward(db *pg.DB) bool {
 	reward, err := GetReward(db, Reward1Id)
@@ -69,6 +73,10 @@ func MockGetReward(db *pg.DB) bool {
 	}
 	if reward.QuantityUsed != Reward1QuantityUsed {
 		log.Printf("reward.QuantityUsed != Reward1QuantityUsed")
+		return false
+	}
+	if reward.Approved != Reward1Approved {
+		log.Printf("reward.Approved != Reward1Approved")
 		return false
 	}
 
@@ -122,6 +130,10 @@ func MockCreateReward(db *pg.DB) bool {
 	}
 	if reward.QuantityUsed != Reward2QuantityUsed {
 		log.Printf("reward.QuantityUsed != Reward2QuantityUsed")
+		return false
+	}
+	if reward.Approved != Reward2Approved {
+		log.Printf("reward.Approved != Reward2Approved")
 		return false
 	}
 
@@ -204,6 +216,10 @@ func MockUpdateReward(db *pg.DB) bool {
 	}
 	if reward.QuantityUsed != Reward4QuantityUsed {
 		log.Printf("reward.QuantityUsed != Reward4QuantityUsed")
+		return false
+	}
+	if reward.Approved != Reward4Approved {
+		log.Printf("reward.Approved != Reward4Approved")
 		return false
 	}
 

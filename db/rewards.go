@@ -12,6 +12,7 @@ type Rewards struct {
 	Description       string `json:"Description"`
 	MaxQuantity       int    `json:"max_quantity"`
 	QuantityUsed      int    `json:"quantity_used"`
+	Approved          bool   `json:"approved"`
 }
 
 func GetReward(db *pg.DB, RewardId int) (*Rewards, error) {
