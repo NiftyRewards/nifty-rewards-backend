@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS rewards
 (
-    reward_id         SERIAL PRIMARY KEY,
+    reward_id          SERIAL PRIMARY KEY,
     merchant_id        INT REFERENCES merchants (merchant_id),
     collection_address VARCHAR REFERENCES Nfts (collection_address),
     token_id           INT     NOT NULL,

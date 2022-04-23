@@ -30,21 +30,6 @@ func main() {
 	port := os.Getenv("PORT")
 	log.Printf("[main] We're up and running!")
 
-	// Start server
-	//router := api.NewAPI(dbInst)
-	//err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
-	//if err != nil {
-	//	log.Printf("err from  router: %v\n", err)
-	//}
-	go func() {
-		router := api.NewAPI(dbInst)
-		err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
-		if err != nil {
-			log.Printf("err from  router: %v\n", err)
-		}
-
-	}()
-
 	// USERS TEST
 	if !db.MockGetUser(dbInst) {
 		panic(err)
@@ -95,5 +80,12 @@ func main() {
 	}
 	if !db.MockGetRewardsByMerchantId(dbInst) {
 		panic(err)
+	}
+
+	//Start server
+	router := api.NewAPI(dbInst)
+	err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
+	if err != nil {
+		log.Printf("err from  router: %v\n", err)
 	}
 }

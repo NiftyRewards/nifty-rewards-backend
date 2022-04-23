@@ -7,4 +7,3 @@ CREATE TABLE IF NOT EXISTS nfts
 
 INSERT INTO nfts (collection_address, collection_name, total_supply)
 VALUES ('0x9999999', 'bayc', 9999);
-

@@ -141,6 +141,6 @@ func MockGetRewardsByMerchantId(db *pg.DB) bool {
 		return false
 	}
 
-	log.Printf("MockCreateReward passed")
+	log.Printf("MockGetRewardsByMerchantId passed")
 	return true
 }

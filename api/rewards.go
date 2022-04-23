@@ -8,6 +8,7 @@ import (
 	"golang-server/db"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type RewardResponse struct {
@@ -16,8 +17,19 @@ type RewardResponse struct {
 	Reward  *db.Rewards `json:"reward"`
 }
 
+type RewardsResponse struct {
+	Success bool          `json:"success"`
+	Error   string        `json:"err"`
+	Rewards []*db.Rewards `json:"rewards"`
+}
+
 func GetRewardsByMerchantId(w http.ResponseWriter, r *http.Request) {
-	merchantId := chi.URLParam(r, "merchant_id")
+	merchantId, err := strconv.Atoi(chi.URLParam(r, "merchant_id"))
+	if err != nil {
+		log.Printf("GetRewardsByMerchantId err1: %v\n", err)
+		w = rewardErrResponse(err, w)
+		return
+	}
 
 	// get the database from context
 	pgdb, ok := r.Context().Value("DB").(*pg.DB)
@@ -26,22 +38,23 @@ func GetRewardsByMerchantId(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// query for the reward
-	reward, err := db.GetRewards(pgdb, &db.Rewards{
-		AddressW3a: addressW3a,
-		Address_B:  addressB,
-	})
+	rewards, err := db.GetRewardsByMerchantId(pgdb, merchantId)
 	if err != nil {
+		log.Printf("GetRewardsByMerchantId err2: %v\n", err)
 		w = rewardErrResponse(err, w)
 		return
 	}
 
 	// return a response
-	res := &RewardResponse{
+	res := &RewardsResponse{
 		Success: true,
 		Error:   "",
-		Reward:  reward,
+		Rewards: rewards,
 	}
-	_ = json.NewEncoder(w).Encode(res)
+	err = json.NewEncoder(w).Encode(res)
+	if err != nil {
+		log.Printf("GetRewardsByMerchantId err3: %v\n", err)
+	}
 	w.WriteHeader(http.StatusOK)
 }
 
