@@ -4,7 +4,7 @@ Backend server created in Golang to provide an API interface for interaction wit
 
 ## Database Design
 
-TODO: Insert Image here
+![database-design](docs/database.drawio.svg)
 
 ### Entities
 
