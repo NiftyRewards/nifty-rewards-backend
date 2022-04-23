@@ -20,7 +20,7 @@ Users (**address_w3a**, address_b)
 
 Campaign (**campaign_id**, _merchant_id_, _collection_address_, start_time, duration)
 
-Rewards (**rewards_id**, _merchant_id_, _collection_address_, token_id, description, quantity, quantity_used)
+Rewards (**rewards_id**, _merchant_id_, _collection_address_, token_id, description, quantity, quantity_used, approved)
 
 ## Endpoints
 
@@ -98,8 +98,18 @@ merchants: Mechant[]
 Request to start a campaign with a collection.
 
 ```txt
+
+Reward {
+  description: String
+  quantity: Number
+}
+
 body:
 collection_address: String
+start_date: datetime
+end_date: datetime
+rewards: Reward[]
+
 ```
 
 ```txt
