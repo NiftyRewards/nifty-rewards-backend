@@ -4,42 +4,38 @@ import (
 	"github.com/go-pg/pg/v10"
 )
 
-type Users struct {
-	AddressW3a string `pg:",pk" json:"address_w3a"`
-	Address_B  string `json:"address_b"`
+type Merchants struct {
+	MerchantId   int    `pg:",pk" json:"merchant_id"`
+	MerchantName string `json:"merchant_name"`
 }
 
-func GetUser(db *pg.DB, addressW3a string) (*Users, error) {
-	user := &Users{}
-	err := db.Model(user).
-		Where("users.address_w3a = ?", addressW3a).
+func GetMerchant(db *pg.DB, merchantName string) (*Merchants, error) {
+	merchant := &Merchants{}
+	err := db.Model(merchant).
+		Where("merchants.merchant_name = ?", merchantName).
 		Select()
 
-	return user, err
+	return merchant, err
 }
 
-func GetUsers(db *pg.DB) ([]*Users, error) {
-	users := make([]*Users, 0)
-	err := db.Model(&users).
+func GetMerchants(db *pg.DB) ([]*Merchants, error) {
+	merchants := make([]*Merchants, 0)
+	err := db.Model(&merchants).
 		Select()
 
-	return users, err
+	return merchants, err
 }
 
-func CreateUser(db *pg.DB, addressW3a string) (*Users, error) {
-	req := Users{
-		AddressW3a: addressW3a,
-	}
-
+func CreateMerchant(db *pg.DB, req Merchants) (*Merchants, error) {
 	_, err := db.Model(&req).Insert()
 	if err != nil {
 		return nil, err
 	}
 
-	user := &Users{}
-	err = db.Model(user).
-		Where("users.address_w3a = ?", addressW3a).
+	merchant := &Merchants{}
+	err = db.Model(merchant).
+		Where("merchants.merchant_name = ?", req.MerchantName).
 		Select()
 
-	return user, err
+	return merchant, err
 }
