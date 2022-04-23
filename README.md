@@ -24,6 +24,8 @@ Rewards (**rewards_id**, _merchant_id_, _collection_address_, token_id, descript
 
 ### User
 
+<br/>
+
 [**POST**] /users/bind/{address_w3a}/{address_to_bind}
 
 Maps the web3Auth wallet address to a wallet that the user owns (one that is used to collect NFTS for example)
@@ -32,6 +34,7 @@ AUTH: Caller must be the owner of the account associated to address_w3a
 
 Replaces current binded wallet with address_to_bind.
 
+<br/>
 
 [**GET**] /user/nfts/{address_w3a}
 
@@ -41,6 +44,7 @@ Returns a list of user’s NFTS in the wallet.
 
 Data is populated from request to Tatum
 
+<br/>
 
 [**GET**] /user/rewards/{merchant_id}
 
@@ -50,8 +54,9 @@ Returns a list of user’s NFTS in the wallet.
 
 Data is populated from request to Tatum
 
-
 [https://apidoc.tatum.io/#operation/NftGetTokensByAddressErc721]
+
+<br/>
 
 [**POST**] /user/rewards/{merchant_id}/redeem
 Redeems rewards based on rewards_id
@@ -60,8 +65,6 @@ Only owner of rewards_id can redeem
 
 Reduce quantity by 1
 Increase quantity_used by 1
-
-<br/>
 <br/>
 <br/>
 ### Merchant
