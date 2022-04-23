@@ -14,17 +14,19 @@ NFTs (**collection_address**, collection_name)
 
 Users (**address_w3a**, address_b)
 
+<br/>
+
 ### Relationships
 
 Campaign (**campaign_id**, _merchant_id_, _collection_address_, start_time, duration, totalSupply)
 
-Which merchant is collaborating with which NFT
-
-Rewards (**rewards_id**, _merchant_id_, _collection_address_, _ownership_id_, description, quantity, quantity_used)
+Rewards (**rewards_id**, _merchant_id_, _collection_address_, token_id, description, quantity, quantity_used)
 
 ## Endpoints
 
 ### User
+
+<br/>
 
 [**POST**] /users/bind/{address_w3a}/{address_to_bind}
 
@@ -34,6 +36,8 @@ AUTH: Caller must be the owner of the account associated to address_w3a
 
 Replaces current binded wallet with address_to_bind.
 
+<br/>
+
 [**GET**] /user/nfts/{address_w3a}
 
 Gets all the NFTS
@@ -41,6 +45,8 @@ Gets all the NFTS
 Returns a list of user’s NFTS in the wallet.
 
 Data is populated from request to Tatum
+
+<br/>
 
 [**GET**] /user/rewards/{merchant_id}
 
@@ -71,6 +77,9 @@ returns:
 Reduce quantity by 1, quantity cannot fall below 0
 Increase quantity_used by 1
 
+<br/>
+<br/>
+
 ### Merchant
 
 [**GET**] /merchants
@@ -81,6 +90,8 @@ Get list of merchants.
 returns:
 merchants: Mechant[]
 ```
+
+<br/>
 
 [**POST**] /merchant/startcampaign
 
@@ -101,6 +112,8 @@ collection_address: String
 - If ownerOf() Collection address is equals to the recovered address of the signature, the collection will be binded.
 ```
 
+<br/>
+
 [**GET**] /merchant/campaigns
 Retrieves all campaigns that a merchant has
 
@@ -108,6 +121,8 @@ Retrieves all campaigns that a merchant has
 returns:
 campaigns: Campaign[]
 ```
+
+<br/>
 
 [**POST**] /merchant/addrewards
 
@@ -120,6 +135,9 @@ body:
 collection_address: String
 description: String
 ```
+
+<br/>
+<br/>
 
 ### Collection Owner
 
