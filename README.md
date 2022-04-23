@@ -14,6 +14,8 @@ NFTs (**collection_address**, collection_name)
 
 Users (**address_w3a**, address_b)
 
+<br/>
+
 ### Relationships
 
 Campaign (**campaign_id**, _merchant_id_, _collection_address_, start_time, duration, totalSupply)
