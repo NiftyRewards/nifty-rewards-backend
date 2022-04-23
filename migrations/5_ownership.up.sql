@@ -7,5 +7,5 @@ CREATE TABLE IF NOT EXISTS ownerships
 );
 
 INSERT INTO ownerships (address_w3a, collection_address, token_id)
-VALUES ('0x123', '0x9999999', 1);
+VALUES ('0xUser1_w3a', '0x9999999', 1);
 

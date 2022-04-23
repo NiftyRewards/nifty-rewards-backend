@@ -14,7 +14,7 @@ func NewAPI(pgdb *pg.DB) *chi.Mux {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger, middleware.WithValue("DB", pgdb))
 	r.Route("/users", func(r chi.Router) {
-		//r.Post("/{addressW3A}", GetUserByAddressW3A)
+		r.Post("/bind/{address_w3a}/{address_to_bind}", PostUpsertBinding)
 	})
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {

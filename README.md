@@ -28,7 +28,7 @@ Rewards (**rewards_id**, _merchant_id_, _collection_address_, token_id, descript
 
 <br/>
 
-[**POST**] /users/bind/{address_w3a}/{address_to_bind}
+[**POST**] ✅/users/bind/{address_w3a}/{address_to_bind}
 
 Maps the web3Auth wallet address to a wallet that the user owns (one that is used to collect NFTS for example)
 

@@ -5,16 +5,24 @@ import (
 	"github.com/go-pg/migrations/v8"
 	"github.com/go-pg/pg/v10"
 	"log"
+	"os"
 )
 
 func NewDB() (*pg.DB, error) {
 	var opts *pg.Options
 	var err error
 
-	opts = &pg.Options{
-		Addr:     "db:5432",
-		User:     "postgres",
-		Password: "admin",
+	if os.Getenv("ENV") == "PROD" {
+		opts, err = pg.ParseURL(os.Getenv("DATABASE_URL"))
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		opts = &pg.Options{
+			Addr:     "db:5432",
+			User:     "postgres",
+			Password: "admin",
+		}
 	}
 
 	// connect to db

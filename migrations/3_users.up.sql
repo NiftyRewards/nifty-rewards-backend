@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS users
 );
 
 INSERT INTO users (address_w3a, address_b)
-VALUES ('0x123', '0x456');
+VALUES ('0xUser1_w3a', '0xUser1_b');
 
