@@ -21,6 +21,14 @@ const Reward2Desc = "rewards2_desc"
 const Reward2MaxQuantity = 2
 const Reward2QuantityUsed = 1
 
+const Reward3Id = 3
+const Reward3Merchant = 2
+const Reward3Address = "0x111111"
+const Reward3TokenId = 112
+const Reward3Desc = "rewards3_desc"
+const Reward3MaxQuantity = 2
+const Reward3QuantityUsed = 1
+
 func MockGetReward(db *pg.DB) bool {
 	reward, err := GetReward(db, Reward1Id)
 	if err != nil {
@@ -104,6 +112,32 @@ func MockCreateReward(db *pg.DB) bool {
 	}
 	if reward.QuantityUsed != Reward2QuantityUsed {
 		log.Printf("reward.QuantityUsed != Reward2QuantityUsed")
+		return false
+	}
+
+	log.Printf("MockCreateReward passed")
+	return true
+}
+
+func MockGetRewardsByMerchantId(db *pg.DB) bool {
+	_, err := CreateReward(db, Rewards{
+		MerchantId:        Reward3Merchant,
+		CollectionAddress: Reward3Address,
+		TokenId:           Reward3TokenId,
+		Description:       Reward3Desc,
+		MaxQuantity:       Reward3MaxQuantity,
+		QuantityUsed:      Reward3QuantityUsed,
+	})
+	if err != nil {
+		log.Printf("[MockGetRewardsByMerchantId] CreateUser err: %v", err)
+	}
+
+	rewards, err := GetRewardsByMerchantId(db, Reward3Merchant)
+	if err != nil {
+		log.Printf("[MockGetRewardsByMerchantId] GetReward: %v", err)
+	}
+	if len(rewards) != 2 {
+		log.Printf("len(rewards) != 2")
 		return false
 	}
 

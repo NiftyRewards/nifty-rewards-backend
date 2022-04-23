@@ -31,6 +31,15 @@ func GetRewards(db *pg.DB) ([]*Rewards, error) {
 	return rewards, err
 }
 
+func GetRewardsByMerchantId(db *pg.DB, merchantId int) ([]*Rewards, error) {
+	rewards := make([]*Rewards, 0)
+	err := db.Model(&rewards).
+		Where("rewards.merchant_id = ?", merchantId).
+		Select()
+
+	return rewards, err
+}
+
 func CreateReward(db *pg.DB, req Rewards) (*Rewards, error) {
 	_, err := db.Model(&req).Insert()
 	if err != nil {

@@ -48,7 +48,7 @@ Data is populated from request to Tatum
 
 <br/>
 
-[**GET**] /user/rewards/{merchant_id}
+[**GET**] ✅/user/rewards/{merchant_id}
 
 Gets all the rewards available filtered by the merchant_id
 
