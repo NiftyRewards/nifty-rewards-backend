@@ -79,7 +79,7 @@ Increase quantity_used by 1
 
 ### Merchant
 
-[**GET**] /merchants
+[**GET**] ✅/merchants
 
 Get list of merchants.
 
