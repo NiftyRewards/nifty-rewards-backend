@@ -10,7 +10,7 @@ TODO: Insert Image here
 
 Merchants (**merchant_id**, merchant_name)
 
-NFTs (**collection_address**, collection_name)
+NFTs (**collection_address**, collection_name, totalSupply)
 
 Users (**address_w3a**, address_b)
 
@@ -18,7 +18,7 @@ Users (**address_w3a**, address_b)
 
 ### Relationships
 
-Campaign (**campaign_id**, _merchant_id_, _collection_address_, start_time, duration, totalSupply)
+Campaign (**campaign_id**, _merchant_id_, _collection_address_, start_time, duration)
 
 Rewards (**rewards_id**, _merchant_id_, _collection_address_, token_id, description, quantity, quantity_used)
 
