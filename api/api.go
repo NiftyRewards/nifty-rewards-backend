@@ -18,7 +18,7 @@ func NewAPI(pgdb *pg.DB) *chi.Mux {
 		r.Get("/{address_w3a}", GetUserByAddressW3A)
 		r.Post("/delete/{address_w3a}", DeleteUserByAddressW3A)
 		r.Post("/bind/{address_w3a}/{address_to_bind}", PostUpsertBinding)
-		r.Get("/rewards/{merchant_id}", GetRewardsByMerchantId)
+		r.Get("/rewards/{address_w3a}/{merchant_id}", GetUserSpecificRewardsByMerchantId)
 		r.Put("/rewards/{reward_id}", PutRewardByRewardId)
 		r.Get("/nfts/{address_w3a}", GetNftsOfAccount)
 	})
@@ -38,6 +38,10 @@ func NewAPI(pgdb *pg.DB) *chi.Mux {
 		r.Get("/", GetAllCampaigns)
 		r.Get("/{merchant_id}/{collection_address}", GetCampaignByMerchantIdCollectionAddress)
 		r.Post("/add", ApproveCampaigns)
+	})
+
+	r.Route("/rewards", func(r chi.Router) {
+		r.Get("/", GetAllRewards)
 	})
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {

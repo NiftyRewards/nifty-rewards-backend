@@ -23,9 +23,62 @@ type RewardsResponse struct {
 	Error   string        `json:"err"`
 	Rewards []*db.Rewards `json:"rewards"`
 }
+type GetUserSpecificRewardsByMerchantIdResponse struct {
+	Success bool    `json:"success"`
+	Error   string  `json:"err"`
+	Tokens  []Token `json:"tokens"`
+}
 
-func GetRewardsByMerchantId(w http.ResponseWriter, r *http.Request) {
+type Token struct {
+	Rewards []*db.Rewards `json:"token_rewards"`
+}
+
+func GetAllRewards(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
+	// get the database from context
+	pgdb, ok := r.Context().Value("DB").(*pg.DB)
+	if !ok {
+		res := &RewardsResponse{
+			Success: false,
+			Error:   "could not get database from context",
+			Rewards: nil,
+		}
+		err := json.NewEncoder(w).Encode(res)
+		if err != nil {
+			log.Printf("err sending resopnse: %v\n", err)
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	// query for the rewards
+	rewards, err := db.GetRewards(pgdb)
+	if err != nil {
+		res := &RewardsResponse{
+			Success: false,
+			Error:   err.Error(),
+			Rewards: nil,
+		}
+		err = json.NewEncoder(w).Encode(res)
+		if err != nil {
+			log.Printf("err sending response: %v\n", err)
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	// return a response
+	res := &RewardsResponse{
+		Success: true,
+		Error:   "",
+		Rewards: rewards,
+	}
+	_ = json.NewEncoder(w).Encode(res)
+	w.WriteHeader(http.StatusOK)
+}
+
+func GetUserSpecificRewardsByMerchantId(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	userAddress := chi.URLParam(r, "address_w3a")
 	merchantId, err := strconv.Atoi(chi.URLParam(r, "merchant_id"))
 	if err != nil {
 		log.Printf("GetRewardsByMerchantId err1: %v\n", err)
@@ -39,23 +92,36 @@ func GetRewardsByMerchantId(w http.ResponseWriter, r *http.Request) {
 		w = rewardErrResponse(errors.New("could not get database from context"), w)
 		return
 	}
-	// query for the reward
-	rewards, err := db.GetRewardsByMerchantId(pgdb, merchantId)
+
+	// query for the user
+	user, err := db.GetUser(pgdb, userAddress)
 	if err != nil {
-		log.Printf("GetRewardsByMerchantId err2: %v\n", err)
-		w = rewardErrResponse(err, w)
+		log.Printf("GetUser err: %v\n", err)
+		w = userErrResponse(err, w)
 		return
 	}
 
-	// return a response
-	res := &RewardsResponse{
-		Success: true,
-		Error:   "",
-		Rewards: rewards,
+	tokens, err := queryTatum(user.Address_B)
+
+	var resp GetUserSpecificRewardsByMerchantIdResponse
+
+	// For each of user's toke, query rewards
+	for _, toke := range tokens {
+		// query for the reward
+		rewards, err := db.GetAllRewardsByMerchantIdCollectionAddressTokenId(pgdb, merchantId, toke.TokenId, toke.ContractAddress)
+		if err != nil {
+			log.Printf("GetUserSpecificRewardsByMerchantIdResponse err: %v\n", err)
+			w = rewardErrResponse(err, w)
+			return
+		}
+
+		resp.Tokens = append(resp.Tokens, Token{Rewards: rewards})
 	}
-	err = json.NewEncoder(w).Encode(res)
+
+	// return a response
+	err = json.NewEncoder(w).Encode(resp)
 	if err != nil {
-		log.Printf("GetRewardsByMerchantId err3: %v\n", err)
+		log.Printf("GetUserSpecificRewardsByMerchantId err3: %v\n", err)
 	}
 	w.WriteHeader(http.StatusOK)
 }
@@ -140,7 +206,6 @@ type rewardDescReq struct {
 type PostRewardResponse struct {
 	Success     bool             `json:"success"`
 	Error       string           `json:"err"`
-	Campaign    db.Campaigns     `json:"campaign_id"`
 	RewardDescs []rewardDescResp `json:"rewards"`
 }
 
@@ -178,12 +243,12 @@ func PostRewards(w http.ResponseWriter, r *http.Request) {
 
 	// For each reward description, populate reward for all tokens in NFT collection
 	for _, rewardDesc := range req.RewardDescs {
-		tokenIdCounter := 1
-		for tokenIdCounter = 1; tokenIdCounter < campaignNft.TotalSupply; tokenIdCounter++ {
+		tokenIdCounter := 0
+		for tokenIdCounter = 0; tokenIdCounter <= campaignNft.TotalSupply; tokenIdCounter++ {
 			newReward := db.Rewards{
 				MerchantId:        req.MerchantId,
 				CollectionAddress: req.CollectionAddress,
-				TokenId:           tokenIdCounter,
+				TokenId:           &tokenIdCounter,
 				Description:       rewardDesc.Description,
 				MaxQuantity:       rewardDesc.MaxQuantity,
 				QuantityUsed:      0,

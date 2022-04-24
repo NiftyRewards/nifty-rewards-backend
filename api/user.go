@@ -3,11 +3,13 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"golang-server/db"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-pg/pg/v10"
@@ -29,6 +31,32 @@ type PostAddressBindResponse struct {
 	Success bool      `json:"success"`
 	Error   string    `json:"err"`
 	User    *db.Users `json:"user"`
+}
+
+type GetNftsFromAccountResponse struct {
+	Success bool    `json:"success"`
+	Error   string  `json:"err"`
+	tokens  []token `json:"tokens"`
+}
+
+type token struct {
+	ContractAddress string `json:"contract_address"`
+	TokenId         int    `json:"token_id"`
+}
+
+type TatumResponse []struct {
+	ContractAddress string   `json:"contractAddress"`
+	Balances        []string `json:"balances"`
+	Metadata        []struct {
+		URL      string `json:"url"`
+		Metadata struct {
+			Description string        `json:"description"`
+			Image       string        `json:"image"`
+			Name        string        `json:"name"`
+			Attributes  []interface{} `json:"attributes"`
+		} `json:"metadata"`
+		TokenID string `json:"tokenId"`
+	} `json:"metadata"`
 }
 
 func GetUserByAddressW3A(w http.ResponseWriter, r *http.Request) {
@@ -215,8 +243,18 @@ func GetNftsOfAccount(w http.ResponseWriter, r *http.Request) {
 		w = userErrResponse(err, w)
 		return
 	}
+	res, err := queryTatum(user.Address_B)
+	if err != nil {
+		w = userErrResponse(err, w)
+		return
+	}
 
-	address_b := user.Address_B
+	// return a response
+	_ = json.NewEncoder(w).Encode(res)
+	w.WriteHeader(http.StatusOK)
+}
+
+func queryTatum(address_b string) ([]token, error) {
 	log.Printf("@@@@@@@@@@@ address_b %s\n", address_b)
 	// Call Tatum
 	apiKey := os.Getenv("TATUM")
@@ -231,12 +269,30 @@ func GetNftsOfAccount(w http.ResponseWriter, r *http.Request) {
 	defer res.Body.Close()
 	body, _ := ioutil.ReadAll(res.Body)
 
-	log.Printf("@@@@@@@@@@@ res : %+v\n", res)
-	log.Printf("@@@@@@ string(body): %s\n", string(body))
+	// snippet only
+	var result TatumResponse
+	if err := json.Unmarshal(body, &result); err != nil { // Parse []byte to go struct pointer
+		fmt.Println("Can not unmarshal JSON")
+	}
 
-	// return a response
-	_ = json.NewEncoder(w).Encode(res)
-	w.WriteHeader(http.StatusOK)
+	log.Printf("@@@@@@@@@@@ result : %+v\n", result)
+	if len(result) < 1 {
+		return nil, errors.New("tatum result length is 0")
+	}
+	contractAddress := result[0].ContractAddress
+	var nfts []token
+	for _, meta := range result[0].Metadata {
+		tokenId, err := strconv.Atoi(meta.TokenID)
+		if err != nil {
+			return nil, err
+		}
+
+		nfts = append(nfts, token{
+			ContractAddress: contractAddress,
+			TokenId:         tokenId,
+		})
+	}
+	return nfts, nil
 }
 
 func userErrResponse(err error, w http.ResponseWriter) http.ResponseWriter {

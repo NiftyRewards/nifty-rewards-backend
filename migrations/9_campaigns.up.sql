@@ -9,4 +9,3 @@ CREATE TABLE IF NOT EXISTS campaigns
 
 INSERT INTO campaigns (merchant_id, collection_address, start_time, end_time)
 VALUES (1, '0xBAYC', now(), now());
-

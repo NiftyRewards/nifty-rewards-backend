@@ -6,4 +6,5 @@ CREATE TABLE IF NOT EXISTS nfts
 );
 
 INSERT INTO nfts (collection_address, collection_name, total_supply)
-VALUES ('0xBAYC', 'bayc', 10);
+VALUES ('0xBAYC', 'bayc', 10),
+       ('0x539d628a5fa811f3087648585bacb30870295f8b', 'Azuki', 5);

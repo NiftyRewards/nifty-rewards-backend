@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS rewards
     reward_id          SERIAL PRIMARY KEY,
     merchant_id        INT REFERENCES merchants (merchant_id),
     collection_address VARCHAR REFERENCES nfts (collection_address),
-    token_id           INT     NOT NULL,
+    token_id           INT     DEFAULT 0,
     description        VARCHAR NOT NULL,
     max_quantity       INT     NOT NULL,
     quantity_used      INT     DEFAULT 0,

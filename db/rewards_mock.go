@@ -8,7 +8,9 @@ import (
 const Reward1Id = 1
 const Reward1Merchant = 1
 const Reward1Address = "0xBAYC"
-const Reward1TokenId = 555
+
+var Reward1TokenId = 555
+
 const Reward1Desc = "rewards1_desc"
 const Reward1MaxQuantity = 4
 const Reward1QuantityUsed = 0
@@ -17,7 +19,9 @@ const Reward1Approved = false
 const Reward2Id = 2
 const Reward2Merchant = 2
 const Reward2Address = "0xCryptoPunks"
-const Reward2TokenId = 111
+
+var Reward2TokenId = 111
+
 const Reward2Desc = "rewards2_desc"
 const Reward2MaxQuantity = 2
 const Reward2QuantityUsed = 1
@@ -26,7 +30,9 @@ const Reward2Approved = false
 const Reward3Id = 3
 const Reward3Merchant = 2
 const Reward3Address = "0xCryptoPunks"
-const Reward3TokenId = 112
+
+var Reward3TokenId = 112
+
 const Reward3Desc = "rewards3_desc"
 const Reward3MaxQuantity = 2
 const Reward3QuantityUsed = 1
@@ -35,7 +41,9 @@ const Reward3Approved = false
 const Reward4Id = 4
 const Reward4Merchant = 2
 const Reward4Address = "0xCryptoPunks"
-const Reward4TokenId = 113
+
+var Reward4TokenId = 113
+
 const Reward4Desc = "rewards4_desc"
 const Reward4MaxQuantity = 2
 const Reward4QuantityUsed = 1
@@ -59,7 +67,7 @@ func MockGetReward(db *pg.DB) bool {
 		log.Printf("reward.CollectionAddress != Reward1Address")
 		return false
 	}
-	if reward.TokenId != Reward1TokenId {
+	if reward.TokenId != &Reward1TokenId {
 		log.Printf("reward.TokenId != Reward1TokenId")
 		return false
 	}
@@ -88,7 +96,7 @@ func MockCreateReward(db *pg.DB) bool {
 	err = CreateReward(db, Rewards{
 		MerchantId:        Reward2Merchant,
 		CollectionAddress: Reward2Address,
-		TokenId:           Reward2TokenId,
+		TokenId:           &Reward2TokenId,
 		Description:       Reward2Desc,
 		MaxQuantity:       Reward2MaxQuantity,
 		QuantityUsed:      Reward2QuantityUsed,
@@ -116,7 +124,7 @@ func MockCreateReward(db *pg.DB) bool {
 		log.Printf("reward.CollectionAddress != Reward2Address")
 		return false
 	}
-	if reward.TokenId != Reward2TokenId {
+	if reward.TokenId != &Reward2TokenId {
 		log.Printf("reward.TokenId != Reward2TokenId")
 		return false
 	}
@@ -145,7 +153,7 @@ func MockGetRewardsByMerchantId(db *pg.DB) bool {
 	err = CreateReward(db, Rewards{
 		MerchantId:        Reward3Merchant,
 		CollectionAddress: Reward3Address,
-		TokenId:           Reward3TokenId,
+		TokenId:           &Reward3TokenId,
 		Description:       Reward3Desc,
 		MaxQuantity:       Reward3MaxQuantity,
 		QuantityUsed:      Reward3QuantityUsed,
@@ -172,7 +180,7 @@ func MockUpdateReward(db *pg.DB) bool {
 	err = CreateReward(db, Rewards{
 		MerchantId:        Reward4Merchant,
 		CollectionAddress: Reward3Address,
-		TokenId:           Reward3TokenId,
+		TokenId:           &Reward3TokenId,
 		Description:       Reward3Desc,
 		MaxQuantity:       Reward3MaxQuantity,
 		QuantityUsed:      Reward3QuantityUsed,
@@ -182,7 +190,7 @@ func MockUpdateReward(db *pg.DB) bool {
 		RewardId:          Reward4Id,
 		MerchantId:        Reward4Merchant,
 		CollectionAddress: Reward4Address,
-		TokenId:           Reward4TokenId,
+		TokenId:           &Reward4TokenId,
 		Description:       Reward4Desc,
 		MaxQuantity:       Reward4MaxQuantity,
 		QuantityUsed:      Reward4QuantityUsed,
@@ -203,7 +211,7 @@ func MockUpdateReward(db *pg.DB) bool {
 		log.Printf("reward.CollectionAddress != Reward4Address")
 		return false
 	}
-	if reward.TokenId != Reward4TokenId {
+	if reward.TokenId != &Reward4TokenId {
 		log.Printf("reward.TokenId != Reward4TokenId")
 		return false
 	}

@@ -8,7 +8,7 @@ type Rewards struct {
 	RewardId          int    `pg:",pk" json:"reward_id"`
 	MerchantId        int    `json:"merchant_id"`
 	CollectionAddress string `json:"collection_address"`
-	TokenId           int    `json:"token_id"`
+	TokenId           *int   `json:"token_id"`
 	Description       string `json:"Description"`
 	MaxQuantity       int    `json:"max_quantity"`
 	QuantityUsed      int    `json:"quantity_used"`
@@ -68,6 +68,17 @@ func GetAllRewardsByMerchantIdCollectionAddress(db *pg.DB, merchantId int, colle
 	rewards := make([]*Rewards, 0)
 	err := db.Model(&rewards).
 		Where("rewards.merchant_id = ?", merchantId).
+		Where("rewards.collection_address = ?", collectionAddress).
+		Select()
+
+	return rewards, err
+}
+
+func GetAllRewardsByMerchantIdCollectionAddressTokenId(db *pg.DB, merchantId, tokenId int, collectionAddress string) ([]*Rewards, error) {
+	rewards := make([]*Rewards, 0)
+	err := db.Model(&rewards).
+		Where("rewards.merchant_id = ?", merchantId).
+		Where("rewards.token_id = ?", tokenId).
 		Where("rewards.collection_address = ?", collectionAddress).
 		Select()
 
