@@ -16,7 +16,13 @@ import (
 type CampaignsResponse struct {
 	Success   bool            `json:"success"`
 	Error     string          `json:"err"`
-	Campaigns []*db.Campaigns `json:"rewards"`
+	Campaigns []*db.Campaigns `json:"campaigns"`
+}
+
+type CampaignResponse struct {
+	Success  bool          `json:"success"`
+	Error    string        `json:"err"`
+	Campaign *db.Campaigns `json:"campaign"`
 }
 
 type ApproveCampaignRequest struct {
@@ -32,7 +38,102 @@ type ApproveCampaignsResponse struct {
 	Campaign *db.Campaigns `json:"campaign_id"`
 }
 
+func GetCampaignByMerchantIdCollectionAddress(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	collectionAddress := chi.URLParam(r, "collection_address")
+	merchantId, err := strconv.Atoi(chi.URLParam(r, "merchant_id"))
+	if err != nil {
+		log.Printf("GetCampaignsByMerchantId err1: %v\n", err)
+		w = rewardErrResponse(err, w)
+		return
+	}
+
+	// get the database from context
+	pgdb, ok := r.Context().Value("DB").(*pg.DB)
+	if !ok {
+		res := &CampaignResponse{
+			Success:  false,
+			Error:    "could not get database from context",
+			Campaign: nil,
+		}
+		err := json.NewEncoder(w).Encode(res)
+		if err != nil {
+			log.Printf("err sending resopnse: %v\n", err)
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	// query for the campaign
+	campaign, err := db.GetCampaignByMerchantIdCollectionAddress(pgdb, merchantId, collectionAddress)
+	if err != nil {
+		res := &CampaignResponse{
+			Success:  false,
+			Error:    err.Error(),
+			Campaign: nil,
+		}
+		err = json.NewEncoder(w).Encode(res)
+		if err != nil {
+			log.Printf("err sending response: %v\n", err)
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	// return a response
+	res := &CampaignResponse{
+		Success:  true,
+		Error:    "",
+		Campaign: campaign,
+	}
+	_ = json.NewEncoder(w).Encode(res)
+	w.WriteHeader(http.StatusOK)
+}
+
+func GetAllCampaigns(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	// get the database from context
+	pgdb, ok := r.Context().Value("DB").(*pg.DB)
+	if !ok {
+		res := &CampaignsResponse{
+			Success:   false,
+			Error:     "could not get database from context",
+			Campaigns: nil,
+		}
+		err := json.NewEncoder(w).Encode(res)
+		if err != nil {
+			log.Printf("err sending resopnse: %v\n", err)
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	// query for the campaigns
+	campaigns, err := db.GetCampaigns(pgdb)
+	if err != nil {
+		res := &CampaignsResponse{
+			Success:   false,
+			Error:     err.Error(),
+			Campaigns: nil,
+		}
+		err = json.NewEncoder(w).Encode(res)
+		if err != nil {
+			log.Printf("err sending response: %v\n", err)
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	// return a response
+	res := &CampaignsResponse{
+		Success:   true,
+		Error:     "",
+		Campaigns: campaigns,
+	}
+	_ = json.NewEncoder(w).Encode(res)
+	w.WriteHeader(http.StatusOK)
+}
+
 func ApproveCampaigns(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	var req ApproveCampaignRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		log.Printf("Error while decoding ApproveCampaignRequest %v\n", err)
@@ -95,6 +196,7 @@ func ApproveCampaigns(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllCampaignsByMerchantId(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	merchantId, err := strconv.Atoi(chi.URLParam(r, "merchant_id"))
 	if err != nil {
 		log.Printf("GetCampaignsByMerchantId err1: %v\n", err)

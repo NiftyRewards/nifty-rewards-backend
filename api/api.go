@@ -35,6 +35,8 @@ func NewAPI(pgdb *pg.DB) *chi.Mux {
 	})
 
 	r.Route("/collectionowner", func(r chi.Router) {
+		r.Get("/", GetAllCampaigns)
+		r.Get("/{merchant_id}/{collection_address}", GetCampaignByMerchantIdCollectionAddress)
 		r.Post("/add", ApproveCampaigns)
 	})
 
@@ -43,4 +45,8 @@ func NewAPI(pgdb *pg.DB) *chi.Mux {
 	})
 
 	return r
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }

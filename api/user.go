@@ -32,6 +32,7 @@ type PostAddressBindResponse struct {
 }
 
 func GetUserByAddressW3A(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	userAddress := chi.URLParam(r, "address_w3a")
 
 	// get the database from context
@@ -76,6 +77,7 @@ func GetUserByAddressW3A(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	// get the database from context
 	pgdb, ok := r.Context().Value("DB").(*pg.DB)
 	if !ok {
@@ -118,6 +120,7 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteUserByAddressW3A(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	userAddress := chi.URLParam(r, "address_w3a")
 
 	// get the database from context
@@ -162,6 +165,7 @@ func DeleteUserByAddressW3A(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostUpsertBinding(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	addressW3a := chi.URLParam(r, "address_w3a")
 	addressB := chi.URLParam(r, "address_to_bind")
 
@@ -192,6 +196,7 @@ func PostUpsertBinding(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetNftsOfAccount(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	// Get User Query Param
 	addressW3a := chi.URLParam(r, "address_w3a")
 

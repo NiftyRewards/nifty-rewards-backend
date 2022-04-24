@@ -24,6 +24,7 @@ type MerchantsResponse struct {
 }
 
 func GetMerchantById(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	merchantId, err := strconv.Atoi(chi.URLParam(r, "merchant_id"))
 	if err != nil {
 		log.Printf("GetRewardsByMerchantId err1: %v\n", err)
@@ -73,7 +74,13 @@ func GetMerchantById(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteMerchantById(w http.ResponseWriter, r *http.Request) {
-	merchantId := chi.URLParam(r, "merchant_id")
+	enableCors(&w)
+	merchantId, err := strconv.Atoi(chi.URLParam(r, "merchant_id"))
+	if err != nil {
+		log.Printf("GetRewardsByMerchantId err1: %v\n", err)
+		w = rewardErrResponse(err, w)
+		return
+	}
 
 	// get the database from context
 	pgdb, ok := r.Context().Value("DB").(*pg.DB)
@@ -91,7 +98,7 @@ func DeleteMerchantById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// query for the merchant
-	err := db.DeleteMerchant(pgdb, merchantId)
+	err = db.DeleteMerchant(pgdb, merchantId)
 	if err != nil {
 		res := &MerchantResponse{
 			Success:  false,
@@ -117,6 +124,7 @@ func DeleteMerchantById(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllMerchants(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	// get the database from context
 	pgdb, ok := r.Context().Value("DB").(*pg.DB)
 	if !ok {

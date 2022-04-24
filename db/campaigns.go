@@ -22,6 +22,16 @@ func GetCampaign(db *pg.DB, CampaignId int) (*Campaigns, error) {
 	return campaign, err
 }
 
+func GetCampaignByMerchantIdCollectionAddress(db *pg.DB, merchantId int, collectionAddress string) (*Campaigns, error) {
+	campaign := &Campaigns{}
+	err := db.Model(campaign).
+		Where("campaigns.merchant_id = ?", merchantId).
+		Where("campaigns.collection_address = ?", collectionAddress).
+		Select()
+
+	return campaign, err
+}
+
 func GetCampaigns(db *pg.DB) ([]*Campaigns, error) {
 	campaigns := make([]*Campaigns, 0)
 	err := db.Model(&campaigns).

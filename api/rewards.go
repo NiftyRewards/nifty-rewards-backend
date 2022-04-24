@@ -25,6 +25,7 @@ type RewardsResponse struct {
 }
 
 func GetRewardsByMerchantId(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	merchantId, err := strconv.Atoi(chi.URLParam(r, "merchant_id"))
 	if err != nil {
 		log.Printf("GetRewardsByMerchantId err1: %v\n", err)
@@ -60,6 +61,7 @@ func GetRewardsByMerchantId(w http.ResponseWriter, r *http.Request) {
 }
 
 func PutRewardByRewardId(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	rewardId, err := strconv.Atoi(chi.URLParam(r, "reward_id"))
 	if err != nil {
 		log.Printf("PutRewardByRewardId err: %v\n", err)
@@ -148,6 +150,7 @@ type rewardDescResp struct {
 }
 
 func PostRewards(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	var req PostRewardsRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		log.Printf("Error whilde decoding PostRewardsRequest %v\n", err)
