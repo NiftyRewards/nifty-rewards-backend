@@ -44,6 +44,10 @@ func NewAPI(pgdb *pg.DB) *chi.Mux {
 		r.Get("/", GetAllRewards)
 	})
 
+	r.Route("/nfts", func(r chi.Router) {
+		r.Get("/", GetAllNfts)
+	})
+
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Hello from NiftyRewards get /"))
 	})
