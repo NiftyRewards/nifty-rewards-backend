@@ -14,13 +14,13 @@ import (
 type MerchantResponse struct {
 	Success  bool          `json:"success"`
 	Error    string        `json:"err"`
-	Merchant *db.Merchants `json:"reward"`
+	Merchant *db.Merchants `json:"merchant"`
 }
 
 type MerchantsResponse struct {
 	Success   bool            `json:"success"`
 	Error     string          `json:"err"`
-	Merchants []*db.Merchants `json:"rewards"`
+	Merchants []*db.Merchants `json:"merchants"`
 }
 
 func GetMerchantById(w http.ResponseWriter, r *http.Request) {
@@ -72,8 +72,8 @@ func GetMerchantById(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func DeleteMerchantByName(w http.ResponseWriter, r *http.Request) {
-	merchantName := chi.URLParam(r, "merchant_name")
+func DeleteMerchantById(w http.ResponseWriter, r *http.Request) {
+	merchantId := chi.URLParam(r, "merchant_id")
 
 	// get the database from context
 	pgdb, ok := r.Context().Value("DB").(*pg.DB)
@@ -91,7 +91,7 @@ func DeleteMerchantByName(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// query for the merchant
-	err := db.DeleteMerchant(pgdb, merchantName)
+	err := db.DeleteMerchant(pgdb, merchantId)
 	if err != nil {
 		res := &MerchantResponse{
 			Success:  false,

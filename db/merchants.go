@@ -50,8 +50,8 @@ func CreateMerchant(db *pg.DB, req Merchants) (*Merchants, error) {
 	return merchant, err
 }
 
-func DeleteMerchant(db *pg.DB, merchantName string) error {
-	_, err := GetMerchantByName(db, merchantName)
+func DeleteMerchant(db *pg.DB, merchantId string) error {
+	_, err := GetMerchantByName(db, merchantId)
 
 	// If merchants not found skip
 	if errors.Is(err, pg.ErrNoRows) {
@@ -59,6 +59,6 @@ func DeleteMerchant(db *pg.DB, merchantName string) error {
 	}
 
 	merchants := &Merchants{}
-	_, err = db.Model(merchants).Where("merchants.merchant_name = ?", merchantName).Delete()
+	_, err = db.Model(merchants).Where("merchants.merchant_id = ?", merchantId).Delete()
 	return nil
 }

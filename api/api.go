@@ -26,7 +26,7 @@ func NewAPI(pgdb *pg.DB) *chi.Mux {
 	r.Route("/merchants", func(r chi.Router) {
 		r.Get("/", GetAllMerchants)
 		r.Get("/{merchant_id}", GetMerchantById)
-		r.Post("/delete/{merchant_name}", DeleteMerchantByName)
+		r.Post("/delete/{merchant_id}", DeleteMerchantById)
 	})
 
 	r.Route("/merchant", func(r chi.Router) {
